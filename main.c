@@ -5,7 +5,8 @@
 
 int main(){
   struct song_node *song = insert_front(0, "oak", "hi");
-  wood = insert_front(wood, "beech", "die");
-  wood = insert_front(wood, "holly", "bye");
+  song = insert_front(song, "beech", "die");
+  song = insert_front(song, "holly", "bye");
+  print_list(song);
   return 0;
 }
