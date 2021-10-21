@@ -53,17 +53,30 @@ struct song_node * compare_node(struct song_node *list, struct song_node *node){
 	if (list == NULL){
 		return 0;
 	}
-	if (strcasecmp(list->artist, node->artist) > 0){
-		return 0;//node's artist is before
+	if (strcasecmp(list->artist, node->artist) > 0){//node is less than list
+		return 0;
 	}
-	else while (strcasecmp(list->artist, node->artist) < 0){
-		if (list->next == 0){//node is at the end
+	while (strcasecmp(list->artist, node->artist) < 0){//node is more than list
+		if (list->next == 0){//node is last
 			return list;
 		}
-		if (list->next != 0){
-			if (strcasecmp(list->next->artist, node->artist) > 0){
-				list = list->next;//node's artist is after}
+		else if (strcasecmp(list->next->artist, node->artist) > 0){//node is between list and node after list
+			return list;
+		}
+		if (strcasecmp(list->next->song, node->song) > 0){//list is less than node, list->next is == to node, node->song is less than list->next->song
+			return list;
+		}
+		list = list->next;
+	}
+	if (strcasecmp(list->artist, node->artist) == 0){//artist is equal
+		while (strcasecmp(list->song, node->song) < 0){//node is more than list
+			if (list->next == 0){//node is last
+				return list;
 			}
+			else if (strcasecmp(list->next->song, node->song) > 0){//node is between list and node after list
+				return list;
+			}
+			list = list->next;
 		}
 	}
 	return list;
