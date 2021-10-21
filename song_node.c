@@ -1,6 +1,19 @@
+/*
+    insert nodes at the front
+    insert nodes in order
+        alphabetical by Artist then by Song
+        you should have a helper function to compare song nodes effectively.
+    find and return a pointer to a node based on artist and song name
+    find and return a pointer to the first song of an artist based on artist name
+    Return a pointer to random element in the list.
+    remove a single specified node from the list
+        specified by both artist and song name.
+*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include "song_node.h"
 
 struct song_node{
 	struct song_node *next;
@@ -27,25 +40,31 @@ struct song_node * insert_alpha(struct song_node *ne, char *a, char *s){
 	ne = compare_node(ne, n);
 	if (ne==0){
 		n->next = front;//node is in front
+		return n;
 	}
-	else{//node is not in front
-		if (ne->next){//node in middle
-			n->next = ne->next;
-		}
-		else{//node is last
-			n->next = 0;
-		}
+	else{
+		n->next = ne->next;
 		ne->next = n;
+	  return front;
 	}
-  return n;
 }
 
 struct song_node * compare_node(struct song_node *list, struct song_node *node){
-	if (strcmp((list->artist), (node->artist)) > 0){
+	if (list == NULL){
+		return 0;
+	}
+	if (strcasecmp(list->artist, node->artist) > 0){
 		return 0;//node's artist is before
 	}
-	else while (strcmp((list->next->artist), (node->artist)) < 0){
-		list = list->next;//node's artist is after
+	else while (strcasecmp(list->artist, node->artist) < 0){
+		if (list->next == 0){//node is at the end
+			return list;
+		}
+		if (list->next != 0){
+			if (strcasecmp(list->next->artist, node->artist) > 0){
+				list = list->next;//node's artist is after}
+			}
+		}
 	}
 	return list;
 }
@@ -54,8 +73,22 @@ void print_list(struct song_node *f){
 	if (f == NULL){
 		printf("nothing in list\n");
 	}
-	printf("artist:%s\t song:%s\n", f->artist, f->song);
-	if (f->next != 0){
-		print_list(f->next);
+	while (f->next != 0){
+		printf("artist:%s\t song:%s\t next:%p\n", f->artist, f->song, f->next);
+		f = f->next;
 	}
+	printf("artist:%s\t song:%s\t \t next:%pend of list\n", f->artist, f->song, f->next);
 }
+/*
+tomatoes, rejoice
+wrist, cumbersome
+trot, nut
+vest, butter
+grin, gun
+wasteful, helpless
+baseball, dull
+screw, air
+cool, attract
+kitty, wretched
+strip, apparatus
+numerous, cynical*/
