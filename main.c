@@ -16,5 +16,6 @@ int main(){
   song = insert_alpha(song, "wasteful", "z");
   song = insert_alpha(song, "wasteful", "n");
   print_list(song);
+  printf("%p\n", find_artist(song, "wasteful"));
   return 0;
 }

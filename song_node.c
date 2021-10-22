@@ -1,8 +1,4 @@
 /*
-    insert nodes at the front
-    insert nodes in order
-        alphabetical by Artist then by Song
-        you should have a helper function to compare song nodes effectively.
     find and return a pointer to a node based on artist and song name
     find and return a pointer to the first song of an artist based on artist name
     Return a pointer to random element in the list.
@@ -56,6 +52,9 @@ struct song_node * compare_node(struct song_node *list, struct song_node *node){
 	if (strcasecmp(list->artist, node->artist) > 0){//node is less than list
 		return 0;
 	}
+	if (strcasecmp(list->artist, node->artist) == 0 && strcasecmp(list->song, node->song) > 0){
+		return 0;
+	}
 	while (strcasecmp(list->artist, node->artist) < 0){//node is more than list
 		if (list->next == 0){//node is last
 			return list;
@@ -63,7 +62,7 @@ struct song_node * compare_node(struct song_node *list, struct song_node *node){
 		else if (strcasecmp(list->next->artist, node->artist) > 0){//node is between list and node after list
 			return list;
 		}
-		if (strcasecmp(list->next->song, node->song) > 0){//list is less than node, list->next is == to node, node->song is less than list->next->song
+		if (strcasecmp(list->next->artist, node->artist) == 0 && strcasecmp(list->next->song, node->song) > 0){//list is less than node, list->next is == to node, node->song is less than list->next->song
 			return list;
 		}
 		list = list->next;
@@ -76,7 +75,10 @@ struct song_node * compare_node(struct song_node *list, struct song_node *node){
 			else if (strcasecmp(list->next->song, node->song) > 0){//node is between list and node after list
 				return list;
 			}
-			list = list->next;
+			if (strcasecmp(list->next->artist, node->artist) == 0){
+				list = list->next;
+			}
+			return list;
 		}
 	}
 	return list;
@@ -90,8 +92,34 @@ void print_list(struct song_node *f){
 		printf("artist:%s\t song:%s\t next:%p\n", f->artist, f->song, f->next);
 		f = f->next;
 	}
-	printf("artist:%s\t song:%s\t \t next:%pend of list\n", f->artist, f->song, f->next);
+	printf("artist:%s\t song:%s\t \t next:%pend of list\n\n", f->artist, f->song, f->next);
 }
+
+struct song_node * find_artist_song(struct song_node *ne, char *a, char *s){
+	while (ne->next){
+		if (strcasecmp(ne->artist, a) == 0 && strcasecmp(ne->song, s) == 0){
+			return ne;
+		}
+		else {
+			ne = ne->next;
+		}
+	}
+	return 0;
+}
+
+struct song_node * find_artist(struct song_node *ne, char *a){
+	while (ne->next){
+		if (strcasecmp(ne->artist, a) == 0){
+		printf("2");
+			return ne;
+		}
+		else {
+			ne = ne->next;
+		}
+	}
+	return 0;
+}
+
 /*
 tomatoes, rejoice
 wrist, cumbersome
