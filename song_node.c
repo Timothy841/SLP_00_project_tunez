@@ -1,14 +1,8 @@
-/*
-    find and return a pointer to a node based on artist and song name
-    find and return a pointer to the first song of an artist based on artist name
-    Return a pointer to random element in the list.
-    remove a single specified node from the list
-        specified by both artist and song name.
-*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <time.h>
 #include "song_node.h"
 
 struct song_node{
@@ -87,15 +81,22 @@ struct song_node * compare_node(struct song_node *list, struct song_node *node){
 void print_list(struct song_node *f){
 	if (f == NULL){
 		printf("nothing in list\n");
+		return;
 	}
 	while (f->next != 0){
 		printf("artist:%s\t song:%s\t next:%p\n", f->artist, f->song, f->next);
 		f = f->next;
 	}
-	printf("artist:%s\t song:%s\t \t next:%pend of list\n\n", f->artist, f->song, f->next);
+	printf("artist:%s\t song:%s\t \t next:%p\tend of list\n\n", f->artist, f->song, f->next);
 }
 
 struct song_node * find_artist_song(struct song_node *ne, char *a, char *s){
+	if (ne == NULL){
+		return 0;
+	}
+	if (strcasecmp(ne->artist, a) == 0 && strcasecmp(ne->song, s) == 0){
+		return ne;
+	}
 	while (ne->next){
 		if (strcasecmp(ne->artist, a) == 0 && strcasecmp(ne->song, s) == 0){
 			return ne;
@@ -104,32 +105,83 @@ struct song_node * find_artist_song(struct song_node *ne, char *a, char *s){
 			ne = ne->next;
 		}
 	}
+	if (strcasecmp(ne->artist, a) == 0 && strcasecmp(ne->song, s) == 0){
+		return ne;
+	}
 	return 0;
 }
 
 struct song_node * find_artist(struct song_node *ne, char *a){
+	if (ne == NULL){
+		return 0;
+	}
 	while (ne->next){
 		if (strcasecmp(ne->artist, a) == 0){
-		printf("2");
 			return ne;
 		}
 		else {
 			ne = ne->next;
 		}
 	}
+	if (strcasecmp(ne->artist, a) == 0){
+		return ne;
+	}
 	return 0;
 }
 
-/*
-tomatoes, rejoice
-wrist, cumbersome
-trot, nut
-vest, butter
-grin, gun
-wasteful, helpless
-baseball, dull
-screw, air
-cool, attract
-kitty, wretched
-strip, apparatus
-numerous, cynical*/
+int sized(struct song_node *ne){
+	if (ne == NULL){
+		return 0;
+	}
+	int a = 1;
+	while (ne->next){
+		a++;
+		ne = ne->next;
+	}
+	return a;
+}
+
+struct song_node * find_random(struct song_node *ne){
+	if (ne == NULL){
+		return 0;
+	}
+	int a = rand() % sized(ne);
+	for (a>0; a--;){
+		ne = ne->next;
+	}
+	return ne;
+}
+
+struct song_node * remove_node(struct song_node *ne, char *a, char *s){
+	struct song_node *front = ne;
+	if (strcasecmp(ne->artist, a) == 0 && strcasecmp(ne->song, s) == 0){//first node;
+		front = front->next;
+		free(ne);
+		return front;
+	}
+	while (ne->next){
+		if (strcasecmp(ne->next->artist, a) == 0 && strcasecmp(ne->next->song, s) == 0){
+			struct song_node *temp = ne->next;
+			ne->next = ne->next->next;
+			free(temp);
+			return front;
+		}
+		else {
+			ne = ne->next;
+		}
+	}
+	return front;
+}
+
+struct song_node * free_list(struct song_node *ne){
+	if (ne == NULL){
+		return 0;
+	}
+	while (ne->next != 0){
+		struct song_node *temp = ne;
+		ne = ne->next;
+		free(temp);
+	}
+	free(ne);
+	return 0;
+}
